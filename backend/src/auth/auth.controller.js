@@ -6,7 +6,7 @@ export class AuthController {
        this.authService = new AuthService();
     }
 
-    async login(req, res) {
+    async login(req, res, next) {
         const{email, password} = req.body;
         try {
             
@@ -15,7 +15,7 @@ export class AuthController {
 
             
         } catch (error) {
-            return res.status(401).json("Login não autorizado");
+            next(error);
         }
 
     }

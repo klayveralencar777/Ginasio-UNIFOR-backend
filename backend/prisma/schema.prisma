@@ -17,14 +17,42 @@ model User {
   cpf       String   @unique
   birthDate DateTime
   phone     String
-  role      Role     
-  member    Member?
-  scheduling Scheduling[]
-  createdAt DateTime @default(now())
- 
+  typeUser   TypeUser
+  aluno       Aluno?
+  funcionario Funcionario?
+  estrangeiro Estrangeiro?
   
+  scheduling  Scheduling[]
+  createdAt   DateTime @default(now())
 }
 
+model Aluno {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  matricula   String   @unique
+  
+  createdAt   DateTime @default(now())
+}
+
+model Funcionario {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  matricula   String   @unique
+  
+  createdAt   DateTime @default(now())
+}
+
+model Estrangeiro {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+}
 
 model Scheduling {
   id        String   @id @default(uuid())
@@ -33,17 +61,14 @@ model Scheduling {
   user      User     @relation(fields: [userId], references: [id])
   place     String
   date      DateTime
-  status     Status
+  status    Status
 
   createdAt DateTime @default(now())
   
 
+
 }
 
-enum Role {
-  ADMIN
-  USER
-}
 
 enum Status {
   PENDING
@@ -51,19 +76,9 @@ enum Status {
   CANCELLED
 }
 
-enum MemberType {
-  STUDENT
-  STAFF
-}
 
-
-model Member {
-  id    String   @id @default(uuid())
-  userId String @unique
-  user    User   @relation(fields: [userId], references: [id])
-  registration  String
-  memberType MemberType
-  createdAt DateTime @default(now())
- 
-
+enum TypeUser {
+  FUNCIONARIO
+  ALUNO
+  ESTRANGEIRO
 }

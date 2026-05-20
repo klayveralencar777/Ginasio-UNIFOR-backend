@@ -1,21 +1,23 @@
-import { UserService } from "../services/user.service.js";
+
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import { UserRepository } from "../repositories/user.repository.js";
+import { InvalidCredentials } from '../exceptions/exceptions.js';
 
 export class AuthService {
     constructor() {
-        this.userService = new UserService();
+        this.userRepository = new UserRepository();
     }
     
     async login({email, password}) {
         if(!email || !password) {
-            throw new Error("Credenciais inválidas, tente novamente");
+            throw new InvalidCredentials("Credenciais inválidas, tente novamente");
         }
 
-        const user = await this.userService.findByEmail(email);
+        const user = await this.userRepository.findByEmail(email);
         const comparePassword = await bcrypt.compare(password, user.password);
         if(!comparePassword) {
-            throw new Error("Senha inválida, tente novamente");
+            throw new InvalidCredentials("Senha inválida, tente novamente");
         }
 
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
