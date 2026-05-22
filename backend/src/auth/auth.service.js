@@ -26,6 +26,7 @@ export class AuthService {
             email: user.email, 
             token,
             userId : user.id,
+            typeUser: user.typeUser,
 
          }
         return userData;

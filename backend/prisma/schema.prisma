@@ -26,6 +26,14 @@ model User {
   createdAt   DateTime @default(now())
 }
 
+model Place {
+  id          String        @id @default(uuid())
+  name        String        @unique
+  capacity    Int
+  schedulings Scheduling[]
+  createdAt   DateTime      @default(now())
+}
+
 model Aluno {
   id          String   @id @default(uuid())
   userId      String   @unique
@@ -59,14 +67,13 @@ model Scheduling {
 
   userId    String
   user      User     @relation(fields: [userId], references: [id])
-  place     String
+  placeId   String
+  place     Place    @relation(fields: [placeId], references: [id])
   date      DateTime
   status    Status
-
-  createdAt DateTime @default(now())
   
 
-
+  createdAt DateTime @default(now())
 }
 
 

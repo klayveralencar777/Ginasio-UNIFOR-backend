@@ -1,4 +1,4 @@
-import { CpfAlreadyExists, EmailAlreadyExists } from "../exceptions/exceptions.js";
+import { CpfAlreadyExists, EmailAlreadyExists, UnauthorizedError } from "../exceptions/exceptions.js";
 import { UserRepository } from "../repositories/user.repository.js";
 
 export class UserValidationService {
@@ -17,5 +17,18 @@ export class UserValidationService {
             throw new CpfAlreadyExists(`Já existe um usuário com o cpf ${cpf}`);
         }
     }
+
+    async checkIsFuncionario(userId) {
+         const user = await this.userRepository.findById(userId);
+                if(user.typeUser !== "FUNCIONARIO") {
+                    throw new UnauthorizedError("Somente funcionários podem realizar essa função!");
+                }
+    }
+
+    async checkAuthUser(userId) {
+        if(!userId) {
+            throw new UnauthorizedError("Usuário não autorizado!");        }
+    }
+
 
 }
