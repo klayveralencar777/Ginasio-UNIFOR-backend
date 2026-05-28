@@ -43,10 +43,22 @@ export class EstrangeiroService {
     }
 
     async updateEstrangeiro(id, userData) {
-        await this.findEstrangeiroById(id);
-        
-        return await this.estrangeiroRepository.update(id, {});
-    }
+    await this.findEstrangeiroById(id);
+    if (userData?.email) await this.userValidationService.checkUserByEmail(userData.email, id);
+    if (userData?.cpf)   await this.userValidationService.checkUserByCpf(userData.cpf, id);
+
+    return await this.estrangeiroRepository.update(id, {
+        user: {
+            update: {
+                name: userData?.name,
+                email: userData?.email,
+                cpf: userData?.cpf,
+                phone: userData?.phone,
+                birthDate: userData?.birthDate,
+            }
+        }
+    });
+}
 
     async deleteEstrangeiro(id) {
         await this.findEstrangeiroById(id);

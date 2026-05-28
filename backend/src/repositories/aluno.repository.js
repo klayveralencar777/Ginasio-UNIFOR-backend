@@ -17,6 +17,13 @@ export class AlunoRepository {
         });
     }
 
+    async findByCpf(cpf) {
+        return await prisma.aluno.findUnique({
+            where: { cpf },
+            include: { user: true }
+        });
+    }
+
     async findByMatricula(matricula) {
         return await prisma.aluno.findUnique({
             where: { matricula },

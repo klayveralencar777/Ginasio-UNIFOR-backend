@@ -2,7 +2,8 @@ import { AlunoRepository } from "../repositories/aluno.repository.js";
 import bcrypt from 'bcrypt';
 import { UserValidationService } from "./user.validation.service.js";
 import { EntityNotFound } from "../exceptions/exceptions.js";
-import { TypeUser } from "@prisma/client";
+import pkg from '@prisma/client';
+const {TypeUser} = pkg;
 
 export class AlunoService {
     constructor() {
@@ -54,17 +55,23 @@ export class AlunoService {
         });
     }
 
-    async updateAluno(id, userData, alunoData) {
-        await this.findAlunoById(id);
-        
-        const updateData = {};
-        if (alunoData && alunoData.matricula) {
-            updateData.matricula = alunoData.matricula;
+ async updateAluno(id, userData, alunoData) {
+    await this.findAlunoById(id);
+
+    if (userData?.email)      await this.userValidationService.checkUserByEmail(userData.email, id);
+    if (userData?.cpf)        await this.userValidationService.checkUserByCpf(userData.cpf, id);
+    return await this.alunoRepository.update(id, {
+        user: {
+            update: {
+                name: userData?.name,
+                email: userData?.email,
+                cpf: userData?.cpf,
+                phone: userData?.phone,
+                birthDate: userData?.birthDate,
+            }
         }
-
-        return await this.alunoRepository.update(id, updateData);
-    }
-
+    });
+}
     async deleteAluno(id) {
         await this.findAlunoById(id);
         await this.alunoRepository.delete(id);

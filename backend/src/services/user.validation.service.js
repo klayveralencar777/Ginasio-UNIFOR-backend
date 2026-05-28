@@ -10,7 +10,6 @@ export class UserValidationService {
             throw new EmailAlreadyExists(`Já existe um usuário com o email ${email}`);
         }
     }
-
     async checkUserByCpf(cpf) {
         const user = await this.userRepository.findByCpf(cpf);
         if(user) {
