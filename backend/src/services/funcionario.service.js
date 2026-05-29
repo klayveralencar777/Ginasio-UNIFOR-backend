@@ -53,16 +53,24 @@ export class FuncionarioService {
     }
 
     async updateFuncionario(id, userData, funcionarioData) {
-        await this.findFuncionarioById(id);
-        
-        const updateData = {};
-        if (funcionarioData && funcionarioData.matricula) {
-            updateData.matricula = funcionarioData.matricula;
+    await this.findFuncionarioById(id);
+    if (userData?.email)            await this.userValidationService.checkUserByEmail(userData.email, id);
+    if (userData?.cpf)              await this.userValidationService.checkUserByCpf(userData.cpf, id);
+    if (funcionarioData?.matricula) await this.userValidationService.checkUserByMatricula(funcionarioData.matricula, id);
+
+    return await this.funcionarioRepository.update(id, {
+        matricula: funcionarioData?.matricula,
+        user: {
+            update: {
+                name: userData?.name,
+                email: userData?.email,
+                cpf: userData?.cpf,
+                phone: userData?.phone,
+                birthDate: userData?.birthDate,
+            }
         }
-
-        return await this.funcionarioRepository.update(id, updateData);
-    }
-
+    });
+}
     async deleteFuncionario(id) {
         await this.findFuncionarioById(id);
         await this.funcionarioRepository.delete(id);

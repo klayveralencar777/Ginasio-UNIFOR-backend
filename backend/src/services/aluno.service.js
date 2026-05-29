@@ -55,15 +55,21 @@ export class AlunoService {
     }
 
     async updateAluno(id, userData, alunoData) {
-        await this.findAlunoById(id);
-        
-        const updateData = {};
-        if (alunoData && alunoData.matricula) {
-            updateData.matricula = alunoData.matricula;
-        }
+    await this.findAlunoById(id);
 
-        return await this.alunoRepository.update(id, updateData);
-    }
+    if (userData?.email)      await this.userValidationService.checkUserByEmail(userData.email, id);
+    if (userData?.cpf)        await this.userValidationService.checkUserByCpf(userData.cpf, id);
+    return await this.alunoRepository.update(id, {
+        user: {
+            update: {
+                name: userData?.name,
+                email: userData?.email,
+                cpf: userData?.cpf,
+                phone: userData?.phone,
+                birthDate: userData?.birthDate,
+            }
+        }
+    });
 
     async deleteAluno(id) {
         await this.findAlunoById(id);
