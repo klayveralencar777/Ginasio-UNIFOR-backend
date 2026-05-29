@@ -71,6 +71,8 @@ export class AlunoService {
         }
     });
 
+    
+    }
     async deleteAluno(id) {
         await this.findAlunoById(id);
         await this.alunoRepository.delete(id);

@@ -13,6 +13,15 @@ export class SchedulingController {
         }
     }
 
+    async findMySchedulings(req, res, next) {
+        try {
+            const schedulings = await this.schedulingService.findMySchedulings(req.user.id);
+            return res.status(200).json(schedulings);
+        } catch (error) {
+            next(error);
+        }
+    }
+
     async createScheduling(req,res,next) {
         try {   
             const scheduling = await this.schedulingService.createScheduling(req.body, req.user.id);
@@ -23,6 +32,25 @@ export class SchedulingController {
         } catch (error) {
             next(error);
             
+        }
+    }
+
+    async cancelMyScheduling(req, res, next) {
+        try {
+            await this.schedulingService.cancelMyScheduling(req.params.id, req.user.id);
+            return res.status(200).json("Reserva cancelada com sucesso!");
+            
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async cancelScheduling(req, res, next) {
+        try {
+            await this.schedulingService.cancelScheduling(req.params.id, req.user.id);
+            return res.status(200).json("Reserva cancelada com sucesso!");
+        } catch (error) {
+            next(error);
         }
     }
 }

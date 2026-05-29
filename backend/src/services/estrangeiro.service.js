@@ -59,7 +59,8 @@ export class EstrangeiroService {
         }
     });
 
-    async deleteEstrangeiro(id) {
+    }
+     async deleteEstrangeiro(id) {
         await this.findEstrangeiroById(id);
         await this.estrangeiroRepository.delete(id);
     }

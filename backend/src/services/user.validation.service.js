@@ -19,15 +19,23 @@ export class UserValidationService {
     }
 
     async checkIsFuncionario(userId) {
-         const user = await this.userRepository.findById(userId);
-                if(user.typeUser !== "FUNCIONARIO") {
-                    throw new UnauthorizedError("Somente funcionários podem realizar essa função!");
-                }
+        const user = await this.checkAuthUser(userId);
+        if (user.typeUser !== "FUNCIONARIO") {
+            throw new UnauthorizedError("Somente funcionários podem realizar essa função!");
+        }
     }
 
     async checkAuthUser(userId) {
         if(!userId) {
-            throw new UnauthorizedError("Usuário não autorizado!");        }
+            throw new UnauthorizedError("Usuário não autorizado!");
+        }
+
+        const user = await this.userRepository.findById(userId);
+        if (!user) {
+            throw new UnauthorizedError("Usuário não autorizado!");
+        }
+
+        return user;
     }
 
 

@@ -15,6 +15,10 @@ export class AuthService {
         }
 
         const user = await this.userRepository.findByEmail(email);
+        if (!user) {
+            throw new InvalidCredentials("Credenciais inválidas, tente novamente");
+        }
+
         const comparePassword = await bcrypt.compare(password, user.password);
         if(!comparePassword) {
             throw new InvalidCredentials("Senha inválida, tente novamente");

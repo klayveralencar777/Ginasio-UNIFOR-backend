@@ -11,13 +11,13 @@ export class PlaceService {
     }
 
     async findAllPlaces(userId) {
-        this.userValidationService.checkAuthUser(userId);
+        await this.userValidationService.checkAuthUser(userId);
         await this.userValidationService.checkIsFuncionario(userId);
         return await this.placeRepository.findAll();
     }
 
     async findPlaceById(id, userId) {
-        this.userValidationService.checkAuthUser(userId);
+        await this.userValidationService.checkAuthUser(userId);
         await this.userValidationService.checkIsFuncionario(userId);
         const place = await this.placeRepository.findById(id);
         if (!place) {
@@ -27,20 +27,20 @@ export class PlaceService {
     }
 
     async createPlace(placeData, userId) {
-        this.userValidationService.checkAuthUser(userId);
+        await this.userValidationService.checkAuthUser(userId);
         await this.userValidationService.checkIsFuncionario(userId);
         return await this.placeRepository.create(placeData, userId);
     }
 
     async updatePlace(id, placeData, userId) {
-        this.userValidationService.checkAuthUser(userId);
+        await this.userValidationService.checkAuthUser(userId);
         await this.userValidationService.checkIsFuncionario(userId);
         await this.findPlaceById(id, userId);
         return await this.placeRepository.update(id, placeData);
     }
 
     async deletePlace(id, userId) {
-        this.userValidationService.checkAuthUser(userId);
+        await this.userValidationService.checkAuthUser(userId);
         await this.userValidationService.checkIsFuncionario(userId);
         await this.findPlaceById(id, userId);
         await this.placeRepository.delete(id);
